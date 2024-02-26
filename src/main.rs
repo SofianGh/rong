@@ -5,6 +5,7 @@ use ggez::graphics::{Color, PxScale, TextFragment};
 use ggez::input::keyboard::KeyCode;
 use ggez::{graphics, Context, GameResult};
 use mint::Point2;
+use rand::Rng;
 
 // resolution requires 4* expected pixel size, not sure why :)
 const WINDOW_HEIGHT: f32 = 400.0;
@@ -122,9 +123,15 @@ impl MainState {
     }
 
     fn reset_ball(&mut self) {
-        self.ball.pos_x = WINDOW_WIDTH / 2.0;
-        self.ball.pos_y = WINDOW_HEIGHT / 2.0;
         self.ball.vel_x *= -1.0;
+        self.ball.pos_y = rand::thread_rng().gen_range(0..=WINDOW_HEIGHT as i32) as f32;
+        println!("{}", self.ball.pos_y);
+
+        if self.ball.vel_x > 0.0 {
+            self.ball.pos_x = PADDLE_WIDTH * 2.0;
+        } else {
+            self.ball.pos_x = WINDOW_WIDTH - PADDLE_WIDTH * 2.0;
+        }
     }
 }
 
