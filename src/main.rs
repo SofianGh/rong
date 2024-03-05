@@ -214,26 +214,26 @@ impl EventHandler for MainState {
             self.player1.pos_y -= PADDLE_SPEED
         }
 
-        let noise: f32 = rand::thread_rng().gen_range(0.0..=2.0);
-        // println!("{:2}", noise);
+        // This needs to be base turned around and based on user input.
         if self.player2._player_id == PlayerID::Player2 {
             let noise: f32 = rand::thread_rng().gen_range(-1.0..=1.0);
             // Perfect tracking
-            let y_offset = (self.ball.pos_y - (self.player2.pos_y + PADDLE_HEIGHT / 4.0));
+            let y_offset = self.ball.pos_y - (self.player2.pos_y + PADDLE_HEIGHT / 4.0);
 
             if y_offset > 0.0 && self.player2.pos_y <= WINDOW_HEIGHT - PADDLE_HEIGHT / 2.0 {
                 self.player2.pos_y += y_offset.min(PADDLE_SPEED);
             } else if y_offset < 0.0 && self.player2.pos_y >= 0.0 {
                 self.player2.pos_y += y_offset.max(-PADDLE_SPEED);
             }
-        }
-
-        if ctx.keyboard.is_key_pressed(self.player2.key_down)
-            && self.player2.pos_y <= WINDOW_HEIGHT - PADDLE_HEIGHT / 2.0
-        {
-            self.player2.pos_y += PADDLE_SPEED
-        } else if ctx.keyboard.is_key_pressed(self.player2.key_up) && self.player2.pos_y >= 0.0 {
-            self.player2.pos_y -= PADDLE_SPEED
+        } else {
+            if ctx.keyboard.is_key_pressed(self.player2.key_down)
+                && self.player2.pos_y <= WINDOW_HEIGHT - PADDLE_HEIGHT / 2.0
+            {
+                self.player2.pos_y += PADDLE_SPEED
+            } else if ctx.keyboard.is_key_pressed(self.player2.key_up) && self.player2.pos_y >= 0.0
+            {
+                self.player2.pos_y -= PADDLE_SPEED
+            }
         }
 
         if self.check_teleport_collisions(TeleporterLocation::Top) {
